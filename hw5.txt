@@ -1,0 +1,403 @@
+Script started on Wed 09 Mar 2016 07:50:03 PM EST
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat linkedlist.h
+/*
+File: linkedlist.h
+
+Author: Warren Hammock
+
+Date: 3/9/16
+
+Summary: Interface file for the lklist class.
+
+         Class uses a nodes that are linked to
+
+         create a list.
+
+Files to include: 	hw4.cpp, linkedlist.cpp
+
+*/
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <sys/time.h>
+
+
+struct node
+{
+	int value;
+	node* next;
+	node* prev;
+};
+
+class lklist
+{
+public:
+
+
+    lklist();
+    virtual ~lklist(); //deconstructor
+    lklist(const lklist& listOne); //copy constructor
+
+    lklist& operator =(const lklist& listOne); //deep copies one list into another
+
+    int count(); //counts the number of values of list
+    bool empty(); //checks to see if list is empty
+    void pushFront(const int& newValue);  //pushes value before head pointer node
+    void pushBack(const int& newValue);  //pushes value before node
+    node* find(const int newValue);    //locates a value
+    friend std::ostream& operator <<(std::ostream& outStream, const lklist& listOne); //overloaded operator for output
+    void erase(node* toDelete); //deletes value
+    void clearList();   //clears all values from the list and leaves head
+
+
+
+
+private:
+
+	node* head;
+
+};
+
+#endif
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat 
+[K[cwh3@pluto CS519]$ cat linkedlist.cpp
+/*
+File: linkedlist.h
+
+Author: Warren Hammock
+
+Date: 3/9/16
+
+Summary: Definitions to functions for
+
+         the lklist class.  Class links
+
+         nodes together to create a list.
+
+Files to include: 	hw4.cpp, linkedlist.h
+
+*/
+
+#include "linkedlist.h"
+
+
+//default constructor
+lklist::lklist()
+{
+    head = new node;
+    head->prev = head;
+    head->next = head;
+
+
+}
+
+//--------------------------
+
+//copy constructor
+lklist::lklist(const lklist& listIn)
+{
+    head = new node;
+    head->prev = head;
+    head->next = head;
+
+
+
+    node* temp = listIn.head;
+
+    while (temp->next != listIn.head)
+
+    {
+
+        temp = temp->next;
+
+        pushBack(temp->value);
+
+
+
+    }
+
+}
+
+//--------------------------
+
+//deconstructor
+
+lklist::~lklist()
+{
+
+    while (head->next != head)
+    {
+        erase(head->next);
+
+    }
+    delete head;
+
+}
+
+//--------------------------
+//returns the number of values in the list
+int lklist::count()
+{
+    node* temp;
+    temp = head;
+    int counter =  0;
+    while (temp->next != head)
+    {
+        temp = temp->next;
+        counter++;
+    }
+    return counter;
+}
+
+
+
+
+//--------------------------
+
+//checks if the list is empty
+bool lklist::empty()
+{
+
+    return (head->next == head);
+
+}
+
+//--------------------------
+
+//places value and node after head
+void lklist::pushFront(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->prev = head;
+	nextNode->next = head->next;
+	head->next->prev = nextNode;
+	head->next = nextNode;
+
+}
+
+//--------------------------
+
+//places new value and node before head
+void lklist::pushBack(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->prev = head->prev;
+	nextNode->next = head;
+	head->prev->next = nextNode;
+	head->prev = nextNode;
+
+}
+//--------------------------
+
+//find the position of node by its value
+node* lklist::find(const int valueToFind)
+{
+    node* temp;
+    temp = head;
+    while (temp->value != valueToFind && temp->next != head)
+    {
+        temp = temp->next;
+    }
+    return temp;
+}
+
+//--------------------------
+
+//takes in a node and deletes it
+
+void lklist::erase(node* toDelete)
+{
+    toDelete->next->prev = toDelete->prev;
+    toDelete->prev->next = toDelete->next;
+    delete toDelete;
+}
+
+
+
+
+
+//--------------------------
+
+//deep copies one list into another
+
+lklist& lklist::operator =(const lklist& listOne)
+
+{
+
+    if (head == listOne.head)
+	{
+		head = new node;
+	}
+	if(head->next != head)
+
+        {
+
+        clearList();
+
+        }
+
+    node* temp = listOne.head;
+
+    while (temp->next != listOne.head)
+
+    {
+
+        temp = temp->next;
+
+        pushBack(temp->value);
+
+
+
+    }
+
+    return *this;
+
+
+}
+
+
+
+//--------------------------
+
+//overloaded operator for display
+std::ostream& operator <<(std::ostream& outStream, const lklist& listOne)
+{
+    node* temp = listOne.head;
+    while(temp->next != listOne.head)
+ {
+  outStream << temp->next->value << " ";
+  temp = temp -> next;
+ }
+ return outStream;
+}
+
+//--------------------------
+//clears all values from list
+
+void lklist::clearList()
+{
+
+    while (head->next != head)
+    {
+        node* temp = head->next;
+        temp->next->prev = temp->prev;
+        temp->prev->next = temp->next;
+        delete temp;
+    }
+}
+
+
+
+
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat hw5.cpp
+/*
+File: linkedlist.h
+
+Author: Warren Hammock
+
+Date: 3/9/16
+
+Summary: Driver file for the lklist class.
+
+         Used to test the functionality of
+
+         of the class.  FOR TESTING ONLY.
+
+Files to include: 	linkedlist.cpp, linkedlist.h
+
+*/
+
+
+
+#include "linkedlist.h"
+
+
+
+int main()
+
+{
+
+   //create an lklist object
+
+   lklist listOne;
+
+   //populate listOne with 10 numbers
+
+   srand(time(0));
+
+   for (int i = 0;i < 10; i++)
+
+   {
+
+      listOne.pushFront(rand()%99+1);
+
+   }
+
+   std::cout << listOne << std::endl;
+
+   //create an empty new lklist object
+
+   lklist listTwo;
+
+   //add one number to listTwo
+
+   listTwo.pushFront(13);
+
+   //show listTwo
+
+   std::cout << listTwo << std::endl;
+
+   //replace contents of the listTwo with listOne;
+
+   listTwo = listOne;
+
+   //show contents of listTwo
+
+   std::cout << listTwo << std::endl;
+
+   //clear listTwo
+
+   listTwo.clearList();
+
+   //populate with 10 random numbers
+
+   for (int i = 0;i < 10; i++)
+
+   {
+
+      listTwo.pushFront(rand()%99+1);
+
+   }
+
+   //show listTwo
+
+   std::cout << listTwo << std::endl;
+
+   //use copy constructor with listTwo
+
+   lklist listThr(listTwo);
+
+   //show contents of listThr
+
+   std::cout << listThr << std::endl;
+
+
+
+}
+
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ ./hw5
+87 89 30 32 49 35 34 79 67 12 
+13 
+87 89 30 32 49 35 34 79 67 12 
+35 95 6 55 66 18 2 13 99 59 
+35 95 6 55 66 18 2 13 99 59 
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ exit
+exit
+
+Script done on Wed 09 Mar 2016 07:51:25 PM EST

@@ -1,0 +1,1 @@
+think external sort.  assume we do not have enough memory for entire file.  sort by alphabetical.  how are you going to do it?  how to sort.  external sort/seperate, sort individually. two sorted files, and merge the two into third file.  dont stop at two files, sperate into more than two.  

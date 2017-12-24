@@ -1,0 +1,172 @@
+Script started on Wed 10 Feb 2016 11:13:27 PM EST
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat comle[K[KplexNumber.cpp
+/*
+File complexNumber.cpp
+Created 2/8/16
+created by: Warren Hammock
+use: implementation file for complexNumber.h.
+files need: complexNumber.h implement with another class and hw3.cpp for testing
+purpose: class that adds, subtracts, and multiplies 2 complex numbers.
+*/
+#include <iostream>
+#include <cstdlib>
+#include "complexNumber.h"
+
+
+const complexNumber i(0, 1);
+complexNumber::complexNumber():realPart(0.0), imaginaryPart(0.0){} //default constructor
+complexNumber::complexNumber(double real):realPart(real), imaginaryPart(0.0){}
+complexNumber::complexNumber(double real, double imaginary):realPart(real), imaginaryPart(imaginary){}
+// overloads - operator to change an object with a positive real and imaginary
+// part to have a postive real and negitive imaginary part
+const complexNumber operator -(const complexNumber& number)
+{
+	return complexNumber(number.realPart, -number.imaginaryPart);
+}
+// overload output stream for complex objects to detail real and imaginary
+// numbers
+std::ostream& operator <<(std::ostream& outputStream, const complexNumber& outMessage)
+{
+	outputStream << outMessage.realPart << " + " << outMessage.imaginaryPart <<
+		"i";
+	return outputStream;
+
+}
+// overloads input stream for input of real and imaginary parts to be input
+// from external source
+std::istream& operator >>(std::istream& inputStream, complexNumber& inMessage)
+{
+	inputStream >> inMessage.realPart >> inMessage.imaginaryPart;
+	return inputStream;
+}
+// mulitplies two complexNumber objects, will state if they are they are
+// equal objects. uses return constructor to do calculations.
+//Stopped at multiplication, the instructions did not say add a divide function
+const complexNumber operator *(const complexNumber& first, const complexNumber& second)
+{
+	if (first == second)
+	{
+		std::cout << "the numbers are the same \n";
+		return complexNumber((first.realPart*second.realPart - first.imaginaryPart*second.imaginaryPart),
+			(first.realPart*second.imaginaryPart) + (first.imaginaryPart*second.realPart));
+	}
+	else
+	return complexNumber((first.realPart*second.realPart - first.imaginaryPart*second.imaginaryPart),
+		(first.realPart*second.imaginaryPart) + (first.imaginaryPart*second.realPart));
+}
+// adds two complexNumber objects
+// showing how to return an object by creating a new on locally, versus
+// returning a constructor
+const complexNumber complexNumber::operator +(const complexNumber& otherNumber)
+{
+	complexNumber temp;
+	temp.realPart = realPart + otherNumber.realPart;
+	temp.imaginaryPart = imaginaryPart + otherNumber.imaginaryPart;
+	return temp;
+}
+// subtracts two complexNumber objects
+const complexNumber complexNumber::operator -(const complexNumber& otherNumber)
+{
+	return complexNumber(realPart-otherNumber.realPart, imaginaryPart-otherNumber.imaginaryPart);
+}
+// evaluates two complexNumber object to see if they hold the same value
+const bool operator ==(const complexNumber& first, const complexNumber& second)
+{
+    return ((first.realPart == second.realPart) &&
+        (first.imaginaryPart == second.imaginaryPart));
+}
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat complexNumber.h
+/*
+File complexNumber.h
+Created 2/8/16
+created by: Warren Hammock
+use: interface for the complexNumber.cpp file.
+files need: implementation is stored in complexNumber.cpp, testing will also need hw3.cpp.
+purpose: class that adds, subtracts, and multiplies 2 complex numbers.
+*/
+#ifndef COMPLEX_NUMBER  //defines file to be read
+#define COMPLEX_NUMBER // makes sure the file is only read once, even if the
+						// it is referenced mulitple times
+
+
+
+class complexNumber{
+private:
+	double realPart;		//example number 2 + 3i
+	double imaginaryPart;
+
+public:
+	complexNumber();	//default constructor
+	complexNumber(double real);		//declare real number, imag is 0
+	complexNumber(double real, double imaginary);
+	friend const complexNumber operator -(const complexNumber& number);	//gives negitive value to imaginary part of number
+	friend const bool operator ==(const complexNumber& first, const complexNumber& second); //checks equality of 2 objects
+	friend const complexNumber operator *(const complexNumber& first, const complexNumber& second); //multiplies complex objects
+	friend std::ostream& operator <<(std::ostream& outputStream, const complexNumber& outMessage); //stream output objects
+	friend std::istream& operator >>(std::istream& inputStream, complexNumber& inMessage); //stream input objects
+	const complexNumber operator +(const complexNumber& otherNumber); //adds two complex objects
+	const complexNumber operator -(const complexNumber& otherNumber); //subtracts two complex objects
+
+};
+
+
+
+
+#endif
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat complex[K[K[K[K[K[K[Khw3.cpp
+/*
+File hw3.cpp
+Created 2/8/16
+created by: Warren Hammock
+use: test the implementation of the complexNumber.cpp and complexNumber.h.
+files need: complexNumber.cpp and complexNumber.h
+purpose: tests a class that adds, subtracts, and multiplies 2 complex numbers.
+*/
+#include<iostream>
+#include"complexNumber.h"
+
+
+
+
+int main(){
+
+    complexNumber num1, num2(1.1), num3(2.2, 3.3), userNum, sum, minus, times, equalAmount1(2.2, 3.3), equalAmount2 (2.2, 3.3);
+    std::cout << num1 << std::endl;
+    std::cout << num2 << std::endl;
+    std::cout << num3 << std::endl; //shows 3 diff types of constructors
+    std::cout << "Enter a complex number, first real number then imaginary number: \n";
+    std::cin >> userNum; //gets user complex object
+    std::cout << userNum << std::endl;
+    sum = num3 + userNum;   //adds two complex objects
+    std::cout << sum << std::endl; //output sum of addition
+    minus = num3 - userNum; //subtracts two complex objects
+    std::cout << minus << std::endl; //output subtraction result
+    times = num3 * userNum;     //multiply 2 complex objects
+    std::cout << times << std::endl;    //output muliplication result
+    return 0;
+
+}
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat makefile
+complexNumber.o: complexNumber.h complexNumber.cpp
+		g++ -c -Wall complexNumber.cpp
+hw3.o: hw3.cpp complexNumber.h
+		g++ -c -Wall hw3.cpp
+hw3: hw3.o complexNumbers.o
+		g++ -o -Wall hw3 hw3.o complexNumber.o
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat makefile[1Phw3.cpp[K[K[K[K[K[K[K[K[K[K[Kmake
+make: 'complexNumber.o' is up to date.
+]0;cwh3@pluto:~[cwh3@pluto ~]$ ./hw3
+0 + 0i
+1.1 + 0i
+2.2 + 3.3i
+Enter a complex number, first real number then imaginary number: 
+1.3
+2.4
+1.3 + 2.4i
+3.5 + 5.7i
+0.9 + 0.9i
+-5.06 + 9.57i
+]0;cwh3@pluto:~[cwh3@pluto ~]$ exit
+exit
+
+Script done on Wed 10 Feb 2016 11:16:23 PM EST

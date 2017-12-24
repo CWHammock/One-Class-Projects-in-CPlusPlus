@@ -1,0 +1,233 @@
+Script started on Thu 03 Mar 2016 08:08:21 PM EST
+]0;cwh3@ht319-13:~/CS519[cwh3@ht319-13 CS519]$ cat linkedlist.h
+/*--------------------------------------------------------------------------------------------------------
+	File:	linkedlist.h
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary:	Interface file for linkedlist.cpp.  Class implements a list object comprised of a string on nodes.
+				the nodes are connected from forward and back.  The list is established by a head pointer.
+
+	Files to include: 	hw4.cpp, linkedlist.cpp
+
+---------------------------------------------------------------------------------------------------------*/
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <sys/time.h>
+
+
+struct node
+{
+	int value;
+	node* next;
+	node* prev;
+};
+
+class lklist
+{
+public:
+	lklist();
+	bool empty(); //checks to see if list is empty
+	void pushFront(const int& newValue);  //pushes value before head pointer node
+	void pushBack(const int& newValue);  //pushes value before head pointer node
+	node* find(const int& newValue);    //locates a value
+	friend std::ostream& operator <<(std::ostream& outStream, const lklist& listOne); //overloaded operator for output
+        void erase(node* toDelete); //deletes value
+        void clearList();   //clears all values from the list and leaves head
+
+
+private:
+	node* head;
+
+};
+
+#endif
+]0;cwh3@ht319-13:~/CS519[cwh3@ht319-13 CS519]$ cat hw[K[Klinkedlist.cpp
+/*--------------------------------------------------------------------------------------------------------
+	File:	linkedlist.cpp
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary: 	Definitions to interface linkedlist.h.  Class implements a list object comprised of a string on nodes.
+				the nodes are connected from forward and back.  The list is established by a head pointer.
+
+
+	Files to include:	hw4.cpp, linkedlist.h
+
+---------------------------------------------------------------------------------------------------------*/
+
+#include "linkedlist.h"
+
+
+//default constructor
+lklist::lklist()
+{
+    head = new node;
+    head->prev = head;
+    head->next = head;
+
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+//checks if the list is empty
+bool lklist::empty()
+{
+
+    return (head->next == head);
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+//places value and node after head
+void lklist::pushFront(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->prev = head;
+	nextNode->next = head->next;
+	head->next->prev = nextNode;
+	head->next = nextNode;
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+//places new value and node before head
+void lklist::pushBack(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->prev = head->prev;
+	nextNode->next = head;
+	head->prev->next = nextNode;
+	head->prev = nextNode;
+
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//find the position of node by its value
+node* lklist::find(const int& valueToFind)
+{
+    node* temp;
+    temp = head;
+    while (temp->value != valueToFind && temp->next != head)
+    {
+        temp = temp->next;
+    }
+    return temp;
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+//takes in a node and deletes it
+
+void lklist::erase(node* toDelete)
+{
+    toDelete->next->prev = toDelete->prev;
+    toDelete->prev->next = toDelete->next;
+    delete toDelete;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+
+//overloaded operator for display
+std::ostream& operator <<(std::ostream& outStream, const lklist& listOne)
+{
+    node* temp = listOne.head;
+    while(temp->next != listOne.head)
+ {
+  outStream << temp->next->value << " ";
+  temp = temp -> next;
+ }
+ return outStream;
+}
+
+//------------------------------------------------------------------------------------------------------------
+//clears all values from list
+
+void lklist::clearList()
+{
+
+    while (head->next != head)
+    {
+        node* temp = head->next;
+        temp->next->prev = temp->prev;
+        temp->prev->next = temp->next;
+        delete temp;
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+
+]0;cwh3@ht319-13:~/CS519[cwh3@ht319-13 CS519]$ cat hw4.cpp
+/*--------------------------------------------------------------------------------------------------------
+	File:	hw4.cpp
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary: 	Driver file for class lklist in linkedlist.h and linkedlist.cpp.  Class implements a list object
+				comprised of a string on nodes. The nodes are connected from forward and back.  The list
+				is established by a head pointer.
+
+	Files to include: 	linkedlist.h, linkedlist.cpp
+
+---------------------------------------------------------------------------------------------------------*/
+//usec 10000
+//sec 10000000
+#include "linkedlist.h"
+
+
+int main()
+{
+    lklist lnList;
+    if (lnList.empty())
+    {
+        std::cout << "list is empty" << std::endl;
+    }
+
+    lnList.pushFront(35);
+    lnList.pushFront(36);
+    lnList.pushFront(37);
+    std::cout << lnList << std::endl;
+    lnList.pushFront(44);
+    lnList.pushFront(46);
+    lnList.pushFront(54);
+
+    std::cout << lnList << std::endl;
+    lnList.erase(lnList.find(36));
+    std::cout << lnList << std::endl;
+    lnList.clearList();
+    std::cout << std::endl;
+    std::cout << lnList;
+
+
+
+
+	return 0;
+
+}
+]0;cwh3@ht319-13:~/CS519[cwh3@ht319-13 CS519]$ ./[K[K./hw4
+list is empty
+37 36 35 
+54 46 44 37 36 35 
+54 46 44 37 35 
+
+]0;cwh3@ht319-13:~/CS519[cwh3@ht319-13 CS519]$ exit
+exit
+
+Script done on Thu 03 Mar 2016 08:09:24 PM EST

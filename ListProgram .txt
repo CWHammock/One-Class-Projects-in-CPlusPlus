@@ -1,0 +1,59 @@
+C. Warren Hammock
+CS519
+4/27/16
+Linked List use in Customer Program
+
+How do we keep our customer service straight?  Many commercial establishments service hundreds of customers per day by phone or in person.  When developing software for customer service representatives to use, what is the best data structure to use for listing customers and jobs?    We will analyze data management prospects when creating software for customer service priority lists.   
+We will need a program that can allow a variable number of customers for each rep.  The customers must be easily added and removed from the list to maximize time efficiency.   All reps lists are ordered chronically (first cust to call is the first one in the list FIFO).  There will be no sorting the lists, however, a customer maybe deleted if they remove themselves from the list.   
+The three data structures we are concerned with analyzing are an array, vector, and a linked list for each rep.  What are these data structures? An array is a sequential predefined indexable allocation of memory.  Arrays are compile time constant.   The programmer must declare the memory needed during compile time.  If memory is used outside the allotted memory, the program will run into an out of bounds error.  An example of this error is if a program allocates an array of 5 elements.  If the program tries to input 6 elements into the array, at arrayname[5], the program will encounter an out of bounds error.  If an array is dynamically allocated, it must be explicitly deallocated.  A vector is similar to an array, however, with some differences.  A vector can be dynamically allocated.  The vector manages its memory.  A vector does not need to be relocated in memory if a certain amount of elements are added.  The vector accomplishes this by allocating extra memory at compile time.  Due to this fact, vectors consume more memory than arrays.  If the program requires more memory than the vector allocated, the vector is moved to a different selistntial location in memory.   The process is repeated as the vector increases, doubling in size of memory allocated.   A linked list is a data structure of elements that are non-selistntial in memory.  The elements create a list by housing the location of the next element in the list (single linked list) and the previous element (double linked list).  A linked list is not indexed, thus can be slow when finding an item.   A new element can easily be added or deleted to linked list.  Each individual element takes up more memory than an array or a vector, however, a link list only houses enough memory as needed, no empty overhead.  There are several other differences between the three, but, for the purposes of this evaluation, we will focus specifically on the general idea of these structures.  Our next evaluation will be the efficiency of these structures as it applies to our problem. 
+ An array has the strength of being indexed.  Searching through an array is (O)1.  However, the issue is trying to add or delete items.  The array size is set at compile time. Our program needs the ability to fluctuate the reps list.  The operation for adding and deleting become (O)n due to the nature of the array having to move all elements.  In order for the array to add or delete items, the array must be moved and resized, unless dynamically allocated of space already done.  An array would also not be responsible for its garbage collection, which could lead to memory leaks if moved/modified.    Due to the nature of the program, the lack of organic growth would not make the array a viable option.  Continually resizing arrays could become extremely expensive operations.  Vectors have the benefit of the arrays indexing with dynamic memory allocation.  Indexing for vectors is (O)1.  Inserting at the beginning would be (O)n, however, inserting at end could be (O)1 if the vector does not need to be moved.   For the purposes of this program, vectors suffer from some of the fatal shortcoming that arrays do.  The major downside is the (O)n on inserts at the beginning of the list.   Our program must be able to add and remove quickly and efficiently.  The link list excels in adding and deleting elements.  To add and delete is (O)1 due to the list not having to shift.  Each element in the linked list can be individually added or removed.  This operation is optimal at the beginning or end of a circular linked list, or a list that has a tail and head.  The linked list also can grow organically.  From the evidence provided, a linked list seems to be the most viable implementation of the program.  The linked list allows for the two most important parts of our program, organic growth of the list without boundaries and fast add/pop functionality for elements(customers).  Vector could be useful with an endless supply of memory, but the (O)n on push_front is unacceptable.     
+It is important see the implementation of the linked list: 
+template<class T>
+struct node
+{
+	int id;  
+	//unique id for each call
+	T prob; 
+	//brief description of issue
+	node* prev;
+	node* next;
+}
+template<class T>
+class lklist
+{
+	lklist();
+	//listing the big 3 during this implementation is for expansion 
+	//of the program to possibly satisfy the mobility of a  vector 
+        //or linked list of customer reps as well, if the program 
+        //becomes modified to suit additional needs  
+	virtual ~lklist();
+	//deconstruct specific for this list, but always make virtual
+        //part of big 3, but not utilized in current version
+        //1 list will be continuously used 
+	lklist(const lklist<T>& listOne);
+	//copy constructor, Part of big 3, but not utilized
+        //in the programs current version
+	lklist<T>& operator =(const lklist<T>& listOne);
+	//deep copies one list to another
+        //part of big 3, but not utilized in current version
+        void push_front(const T& prob); 
+	//push customer onto front of list
+	//upon calling, a customer is put in the front of list
+        void pop_back(); 
+	//pops customer off list to service
+        iterator erase(iterator position);
+        //deletes node at iterator position
+        iterator find (iterator first, iterator last, const T& id);
+        //finds a node a node if the customer no longer wants to wait
+        iterator begin();
+	//finds beginning of the linked list
+        iterator end();	
+	//finds the end of the linked list
+	bool empty();
+	//returns if the list is empty, no one waiting
+}
+
+ADDITIONAL THOUGHTS:
+
+The only way to add customers to the list is thru the push_front function, so there is no need for any other function for adding to the list.  If a customer wishes to take themselves off the list, the id is used by the find function and then executes the erase function on the node the iterator is on.   This writer did not feel the addition of the iterator class was not necessary due to the focus of this paper being the data structure and functions applying it.   
+

@@ -1,0 +1,5 @@
+********all destructors must be virtual
+*****it will guarantee the correctness 
+*****calls the correct version of the destructor
+*********opens up memory
+******benefit tremendous costs minor

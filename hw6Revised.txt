@@ -1,0 +1,209 @@
+Script started on Mon 28 Mar 2016 10:11:31 AM EDT
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ g++ - [Ko hw6Revised[K[K[K[K[K[K[K [K[K[K[KList[K[K[K[Klist.[K List.cpp
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ ./list
+34.52 66.43 22.33 
+c b r 
+c b r 
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat Lis[K[K[Klist.c[K[K[K[K[K[KList.cpp
+//============================================================================
+// Name        : List.cpp
+// Author      : Warren Hammock
+// Date        : March 22, 2016
+// Description : Create a template class for a linked list.
+//============================================================================
+
+#include <iostream>
+
+template<class T>
+struct node
+{
+	T value;
+	node* next;
+	node* prev;
+};
+
+template<class T>
+class lklist
+{
+public:
+
+    lklist();
+    virtual ~lklist(); //deconstructor
+    lklist(const lklist<T>& listOne); //copy constructor
+    lklist<T>& operator =(const lklist<T>& listOne); //deep copies one list into another
+    int size(); //counts the number of values of list
+    bool empty(); //checks to see if list is empty
+    void pushFront(const T& newValue);  //pushes value before head pointer node
+    void pushBack(const T& newValue);  //pushes value before node
+    node<T>* find(const T newValue);    //locates a value
+    void display();  //shows list
+    void erase(node<T>* toDelete); //deletes value
+    void clearList();   //clears all values from the list and leaves head
+
+private:
+	node<T>* head;
+};
+//default constructor
+template<class T>
+lklist<T>::lklist()
+{
+    head = new node<T>;
+    head->prev = head;
+    head->next = head;
+}
+//--------------------------
+//copy constructor
+template<class T>
+lklist<T>::lklist(const lklist<T>& listIn){
+
+    head = new node<T>;
+    head->prev = head;
+    head->next = head;
+    node<T>* temp = listIn.head;
+    while (temp->next != listIn.head){
+
+        temp = temp->next;
+        pushBack(temp->value);
+    }
+}
+//--------------------------
+//deconstruct
+template<class T>
+lklist<T>::~lklist(){
+
+    while (head->next != head){
+        erase(head->next);
+    }
+    delete head;
+}
+//--------------------------
+//returns the number of values in the list
+template<class T>
+int lklist<T>::size(){
+    node<T>* temp;
+    temp = head;
+    int counter =  0;
+    while (temp->next != head){
+
+        temp = temp->next;
+        counter++;
+    }
+    return counter;
+}
+//--------------------------
+//checks if the list is empty
+template<class T>
+bool lklist<T>::empty(){
+    return (head->next == head);
+}
+//--------------------------
+//places value and node after head
+template<class T>
+void lklist<T>::pushFront(const T& newValue){
+	node<T>* nextNode;
+	nextNode = new node<T>;
+	nextNode->value = newValue;
+	nextNode->prev = head;
+	nextNode->next = head->next;
+	head->next->prev = nextNode;
+	head->next = nextNode;
+}
+//--------------------------
+//places new value and node before head
+template<class T>
+void lklist<T>::pushBack(const T& newValue){
+	node<T>* nextNode;
+	nextNode = new node<T>;
+	nextNode->value = newValue;
+	nextNode->prev = head->prev;
+	nextNode->next = head;
+	head->prev->next = nextNode;
+	head->prev = nextNode;
+}
+//--------------------------
+//find the position of node by its value
+template<class T>
+node<T>* lklist<T>::find(const T valueToFind){
+    node<T>* temp;
+    temp = head;
+    while (temp->value != valueToFind && temp->next != head){
+        temp = temp->next;
+    }
+    return temp;
+}
+//--------------------------
+//takes in a node and deletes it
+template<class T>
+void lklist<T>::erase(node<T>* toDelete){
+    toDelete->next->prev = toDelete->prev;
+    toDelete->prev->next = toDelete->next;
+    delete toDelete;
+}
+//--------------------------
+//deep copies one list into another
+template<class T>
+lklist<T>& lklist<T>::operator =(const lklist<T>& listOne){
+    if (head == listOne.head){
+		head = new node<T>;
+	}
+	if(head->next != head){
+        clearList();
+    }
+    node<T>* temp = listOne.head;
+    while (temp->next != listOne.head){
+        temp = temp->next;
+        pushBack(temp->value);
+    }
+    return *this;
+}
+//--------------------------
+//overloaded operator for display
+template<class T>
+void lklist<T>::display(){
+    node<T>* temp = head;
+    while(temp->next != head){
+    	std::cout << temp->next->value << " ";
+    	temp = temp -> next;
+    }
+}
+//--------------------------
+//clears all values from list
+template<class T>
+void lklist<T>::clearList(){
+    while (head->next != head){
+        node<T>* temp = head->next;
+        temp->next->prev = temp->prev;
+        temp->prev->next = temp->next;
+        delete temp;
+    }
+}
+
+int main(){
+	//populate and display 2 lists
+	lklist<char> listChr;
+	lklist<float> listFlt;
+	listFlt.pushFront(22.33);
+	listFlt.pushFront(66.43);
+	listFlt.pushFront(34.52);
+	listFlt.display();
+	std::cout << std::endl;
+	listChr.pushBack('c');
+	listChr.pushBack('b');
+	listChr.pushBack('r');
+	listChr.display();
+	std::cout << std::endl;
+	//create 3rd list and deep copy listChr into it
+	lklist<char> listChr2;
+	listChr2 = listChr;
+	listChr2.display();
+	std::cout << std::endl;
+
+
+	return 0;
+}
+
+
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ exit
+exit
+
+Script done on Mon 28 Mar 2016 10:12:41 AM EDT

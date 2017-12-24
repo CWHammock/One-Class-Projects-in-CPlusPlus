@@ -1,0 +1,28 @@
+make into STL, c++ standard library.  
+collection of data scrutures and functions.
+write one function can work with any datatype.  
+80 percent of c++ code is template.
+iterator - goes with data structure.  starting point/end point.  
+iterator knows how to go from node to node.  
+traverse every element once and only once.  
+add iterator class.  
+highly customized.  not reused.   
+each data structure...one iterator...no reuse.  
+cost is just a pointer.  good reason to do it and cost low.  
+both versions work.   
+add iterator class.   not structure due to it being a pointer to a node.  
+must have private constructor.  make list friend of iterator.  list creates interator.  
+iterator always pointing somewhere.  constructor pointing to a node.  everyone pointing to same location. 
+most important thing is how to go to next node.  head to head traverse.  head->next is first.  
+overload ++...current to current->next.  overload --.   overload star operator(data in pointer).  overload address.
+start defined as first node.  [a,b) a=head->next  b=head.  two functions begin() end() - in the list class.
+list.begin   list.end  all return iterator.  
+display is gone.  iterator point to begin() to end() cout every value along way.  
+create iterator constructor.   
+++
+--
+* overloaded.
+==
+!=
+just do display.    
+

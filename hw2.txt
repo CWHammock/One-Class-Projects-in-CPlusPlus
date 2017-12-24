@@ -1,0 +1,247 @@
+Script started on Mon 25 Jan 2016 08:13:52 PM EST
+]0;cwh3@pluto:~[cwh3@pluto ~]$ g++ -c Clicker1.cpp
+]0;cwh3@pluto:~[cwh3@pluto ~]$ g++ -c ClickerMain.cpp
+]0;cwh3@pluto:~[cwh3@pluto ~]$ g++ -o CLick[K[K[K[Kllick[K[K[K[KickerProgram Clicker1.o ClickerMain.o
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat Clicker.cpp
+cat: Clicker.cpp: No such file or directory
+]0;cwh3@pluto:~[cwh3@pluto ~]$ cat Clicker1.cpp
+#include<iostream>
+#include"Clicker1.h"
+
+using namespace std;
+
+Clicker::Clicker():c_ones(0), c_tens(0), d_ones(0), d_tens(0)
+{}
+
+Clicker::Clicker(int first):c_ones(first), c_tens(0), d_ones(0), d_tens(0)
+{}
+
+Clicker::Clicker(int first, int second):c_ones(first), c_tens(second), d_ones(0), d_tens(0)
+{}
+
+Clicker::Clicker(int first, int second, int third):c_ones(first), c_tens(second), d_ones(third), d_tens(0)
+{}
+
+Clicker::Clicker(int first, int second, int third, int fourth):c_ones(first), c_tens(second), d_ones(third), d_tens(fourth)
+{}
+
+void Clicker::choiceInstructions()
+{
+	cout << "Let me know what you want to do: press 'a' to add one.  press 's' to add 10. \n" <<  "press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. \n";
+}
+
+
+void Clicker::getAmount()
+{
+	cout << "$ " <<  d_tens << d_ones << "." << c_tens << c_ones << endl;
+}
+
+void Clicker::overFlow()
+{
+	cout << "You have reach the max.  I will reset now" << endl;
+	reset();
+}
+
+
+void Clicker::reset()
+{
+	c_ones = 0;
+	c_tens = 0;
+	d_ones = 0;
+	d_tens = 0;
+}
+
+void Clicker::incr1()
+{
+	if (c_ones == 9)
+	{
+		c_ones = 0;
+		incr10();
+	}
+	else
+	{	
+		c_ones = c_ones + 1;
+	}	
+}
+
+void Clicker::incr10()
+{
+	if (c_tens == 9)
+	{
+		c_tens = 0;
+		incr100();
+	}
+	else
+	{
+		c_tens = c_tens + 1;
+	}
+}
+
+void Clicker::incr100()
+{
+	if (d_ones == 9)
+	{
+		d_ones = 0;
+		incr1000();
+	}
+	else
+	{
+		d_ones = d_ones + 1;
+	}
+}
+
+void Clicker::incr1000()
+{
+	if (d_tens == 9)
+	{
+		overFlow();
+		reset();
+	}
+	else
+	{
+		d_tens = d_tens + 1;
+	}
+}]0;cwh3@pluto:~[cwh3@pluto ~]$ cat Clicker.[K1.h
+/*
+Program to simulate an old fashioned counter.  User has the ability to add to a number with 2 place holders for dollars and 2 place holders for cents.  The amount can only reach $ 99.99.  Any additional amount added will default to a reset and start at $ 00.00.  User will enter a loop to increase the amount by 1, 10, 100, or 1000.  The user can also reset the number by forcing the counter to its max.  User can exit.
+*/
+
+class Clicker{
+
+//each object of class will have 4 variables to be place holders for each number
+//in the 4 digit amount
+private:
+	
+	int c_ones;		//represents ones in cents amount
+	int c_tens;		//tens in cents amount
+	int d_ones;		//ones in dollars amount
+	int d_tens;		//tens in dollar amount
+		
+	
+public:
+	//overloaded constructors are for testing.  Real device would not start with 
+	//predefined objects, they would start as default and be added to
+	Clicker(int first, int second, int third, int fourth);
+	Clicker(int first, int second, int third);
+	Clicker(int first, int second);
+	Clicker(int first);
+	Clicker();//default constructor
+	void choiceInstructions(); //choice instructions for while loop a,s,d,f,o,e
+	void getAmount();		//returns amount
+	void reset();		//resets amount
+	void incr1();			//adds one cent
+	void incr10();		//adds ten cents
+	void incr100();		//adds one dollar
+	void incr1000();		//adds ten dollars
+	void overFlow();			//has added to 99.99, error flag thrown
+
+};]0;cwh3@pluto:~[cwh3@pluto ~]$ cat ClickerMin[K[Kain.cpp
+/* CS 519 - Spring 2016, Dr. Liu
+Warren Hammock
+Homework 2
+
+*/
+
+
+#include<iostream>
+#include"Clicker1.h"
+
+using namespace std;
+
+int main(){
+	char choice;
+	Clicker counterMax(9, 9, 9, 9);
+	counterMax.getAmount();
+	counterMax.incr1();
+	counterMax.getAmount();
+	Clicker counter0;
+	counter0.getAmount();
+	counter0.incr1();
+	counter0.getAmount();
+	counter0.incr10();
+	counter0.getAmount();
+	counter0.choiceInstructions();
+	cin >> choice;
+	while (choice != 'e')
+	{
+		switch(choice)
+		{
+			case 'a': 
+				counter0.getAmount();
+				counter0.incr1();
+				counter0.getAmount();
+				break;
+			
+			case 's':
+				counter0.getAmount();
+				counter0.incr10();
+				counter0.getAmount();
+				break;
+				
+			
+			case 'd':
+				counter0.getAmount();
+				counter0.incr100();
+				counter0.getAmount();
+				break;
+			
+			case 'f':
+				counter0.getAmount();
+				counter0.incr1000();
+				counter0.getAmount();
+				break;
+			
+			case 'o':
+				counter0.overFlow();
+				break;
+				
+			default:
+				cout << "unknown letter selection." << endl;
+			
+		}
+		counter0.choiceInstructions();
+		cin >> choice;
+	}
+}]0;cwh3@pluto:~[cwh3@pluto ~]$ ./ClickerProgram
+$ 99.99
+You have reach the max.  I will reset now
+$ 00.00
+$ 00.00
+$ 00.01
+$ 00.11
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+a
+$ 00.11
+$ 00.12
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+s
+$ 00.12
+$ 00.22
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+d
+$ 00.22
+$ 01.22
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+f
+$ 01.22
+$ 11.22
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+o
+You have reach the max.  I will reset now
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+a
+$ 00.00
+$ 00.01
+Let me know what you want to do: press 'a' to add one.  press 's' to add 10. 
+press 'd' to add 100.  press 'f' to add 1000.  press 'o' for overflow.  press 'e' to exit. 
+e
+]0;cwh3@pluto:~[cwh3@pluto ~]$ exit
+exit
+
+Script done on Mon 25 Jan 2016 08:16:21 PM EST

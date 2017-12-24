@@ -1,0 +1,443 @@
+Script started on Wed 02 Mar 2016 10:23:50 PM EST
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat linkedlist.h
+/*--------------------------------------------------------------------------------------------------------
+	File:	linkedlist.h
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary:	Interface file for linkedlist.cpp.  Class implements a list object comprised of a string on nodes.
+				the nodes are connected from forward and back.  The list is established by a head pointer.
+
+	Files to include: 	hw4.cpp, linkedlist.cpp
+
+---------------------------------------------------------------------------------------------------------*/
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <sys/time.h>
+
+
+struct node
+{
+	int value;  //hods value of current node
+	node* before; //holds position before current node
+	node* after;    //holds position of node after current node
+
+};
+
+class lklist
+{
+public:
+	lklist();
+	bool isEmpty(); //checks to see if list is empty
+	friend std::ostream& operator <<(std::ostream& outStream, const lklist& listOne); //overloaded operator for output
+    void pushBeforeHead(const int& newValue); //pushes value before head pointer node
+    void pushAfterHead(const int& newValue);    //pushes value after head pointer node
+    int countNodes();   //returns the number of nodes in list
+    void findDataPos(int valueToFind);  //finds node position by its value
+	void deleteByValue(int valueToDelete);  //deletes a node by using its value to find its location
+	node* popNext(); //returns the next node after head
+	void deleteByNode(node* toDelete); //accepts node and deletes it
+	void display(); //another display function
+	void clearList();   //clears all nodes from list and leaves head pointer
+	void listMembers(); //lists all members and position
+
+
+private:
+	node* head;
+
+};
+
+#endif
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat linkedlist.cpp
+/*--------------------------------------------------------------------------------------------------------
+	File:	linkedlist.cpp
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary: 	Definitions to interface linkedlist.h.  Class implements a list object comprised of a string on nodes.
+				the nodes are connected from forward and back.  The list is established by a head pointer.
+
+
+	Files to include:	hw4.cpp, linkedlist.h
+
+---------------------------------------------------------------------------------------------------------*/
+
+#include "linkedlist.h"
+
+
+//default constructor
+lklist::lklist()
+{
+    head = new node;
+    head->before = head;
+    head->after = head;
+
+
+}
+//------------------------------------------------------------------------------------------------------------
+
+//pulls node after head out
+node* lklist::popNext()
+{
+    node* temp;
+    temp = new node;
+    if (head->after != head)
+    {
+        temp = head->after;
+    }
+    return temp;
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+//takes in a node and deletes it
+void lklist::deleteByNode(node* toDelete)
+{
+    toDelete->after->before = toDelete->before;
+    toDelete->before->after = toDelete->after;
+    delete toDelete;
+}
+
+//------------------------------------------------------------------------------------------------------------
+//clears all nodes in list
+void lklist::clearList()
+{
+	node* temp;
+	node* current;
+	current = head->after;
+	while (current != head)
+	{
+		temp = current;
+		temp->after->before = temp->before;
+		temp->before->after = temp->after;
+		current = current->after;
+	}
+	current = new node;
+	delete current;
+	delete temp;
+
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//checks if the list is empty
+bool lklist::isEmpty()
+{
+    node* temp = head;
+    if (temp->after == head)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//overloaded operator for display
+std::ostream& operator <<(std::ostream& outStream, const lklist& listOne)
+{
+    outStream << "Head ";
+    node* temp = listOne.head;
+    while(temp->after != listOne.head)
+ {
+  outStream << temp->after->value << " ";
+  temp = temp -> after;
+ }
+ return outStream;
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//places new value and node before head
+void lklist::pushBeforeHead(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->before = head->before;
+	nextNode->after = head;
+	head->before->after = nextNode;
+	head->before = nextNode;
+
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//places value and node after head
+void lklist::pushAfterHead(const int& newValue)
+{
+	node* nextNode;
+	nextNode = new node;
+	nextNode->value = newValue;
+	nextNode->before = head;
+	nextNode->after = head->after;
+	head->after->before = nextNode;
+	head->after = nextNode;
+
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//returns the number of nodes in the list
+int lklist::countNodes()
+{
+    int counter = 0;
+    node* temp;
+    temp = new node;
+    temp = head;
+    while (temp->after != head)
+    {
+
+        temp = temp->after;
+        counter++;
+    }
+    return counter;
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//find the position of node by its value
+void lklist::findDataPos(int valueToFind)
+{
+    node* temp;
+    temp = new node;
+    temp = head;
+	int counter = 0;
+    while (temp->value != valueToFind && temp->after != head)
+    {
+        temp = temp->after;
+		counter++;
+    }
+	if (temp->value == valueToFind)
+	{
+		std::cout << "The value: " << valueToFind << " is the " << counter << " node in the list";
+	}
+	else
+	{
+		std::cout << "The value was not in the list";
+	}
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//locate a node by its value and delete it
+void lklist::deleteByValue(int valueToDelete)
+{
+    node* temp;
+    temp = new node;
+    temp = head;
+    while (temp->value != valueToDelete && temp->after != head)
+    {
+        temp = temp->after;
+    }
+    if (temp-> value == valueToDelete)
+    {
+        temp->before->after = temp->after;
+        temp->after->before = temp->before;
+        delete temp;
+    }
+    else
+    {
+        std::cout << "The value was not in the list";
+    }
+}
+//-------------------------------------------------------------------------------------------------------------
+
+// displays all nodes in the list
+void lklist::display()
+{
+
+    node* temp;
+    temp = new node;
+    temp = head->after;
+    if (temp == head)
+    {
+        std::cout << "There is nothing to print";
+    }
+    else
+    {
+        std::cout << "Head ";
+    }
+    while (temp != head)
+    {
+        std::cout << temp->value << " ";
+        temp = temp->after;
+    }
+
+}
+//-------------------------------------------------------------------------------------------------------------
+
+//lists all nodes and the position of them
+void lklist::listMembers()
+{
+    int counter = 0;
+    node* temp;
+    temp = new node;
+    temp = head->after;
+    if (temp == head)
+    {
+        std::cout << "There is nothing to print";
+    }
+    std::cout << "Numbers: ";
+    while (temp != head)
+    {
+        std::cout << std::setw(4) << temp->value;
+        temp = temp->after;
+        counter++;
+    }
+    std::cout << std::endl;
+    std::cout << "Position: ";
+    for (int i = 0; i < counter; i++)
+    {
+        std:: cout << std::setw(3) << i + 1 << " ";
+    }
+}
+
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat linked[K[K[K[K[K[Khw4.cpp
+/*--------------------------------------------------------------------------------------------------------
+	File:	hw4.cpp
+
+	Author:	Warren Hammock
+
+	Date:	3/2/2016
+
+	Summary: 	Driver file for class lklist in linkedlist.h and linkedlist.cpp.  Class implements a list object
+				comprised of a string on nodes. The nodes are connected from forward and back.  The list
+				is established by a head pointer.
+
+	Files to include: 	linkedlist.h, linkedlist.cpp
+
+---------------------------------------------------------------------------------------------------------*/
+//usec 10000
+//sec 10000000
+#include "linkedlist.h"
+
+
+int main()
+{
+    struct timeval s_time, e_time;
+
+    //create lklist "linked list" object
+    lklist lnList;
+    //print contents of empty list
+    std::cout << lnList << std::endl << std::endl;
+
+    //test speed of create/delete linked list using clearlist function
+    srand(time(0));
+    gettimeofday(&s_time, 0);
+    for (int i = 0; i < 1000; i++)
+    {
+        lnList.pushAfterHead(rand()%99);
+    }
+    lnList.clearList();
+    gettimeofday(&e_time, 0);
+    float seconds = e_time.tv_sec - s_time.tv_sec;
+    float microseconds = (e_time.tv_usec) - (s_time.tv_usec);
+    std::cout << "The test ran in " << seconds << " seconds and " << microseconds <<
+              " microseconds." << std::endl << std::endl;
+    //end test
+
+    //test speed of create/delete linked list using deleteByNode/popNext function
+    srand(time(0));
+    gettimeofday(&s_time, 0);
+    int counter = 0;
+    for (int i = 0; i < 1000; i++)
+    {
+        lnList.pushAfterHead(rand()%99);
+        counter++;
+    }
+    while(counter != 0)
+    {
+    lnList.deleteByNode(lnList.popNext());
+    counter--;
+    }
+    gettimeofday(&e_time, 0);
+    seconds = e_time.tv_sec - s_time.tv_sec;
+    microseconds = (e_time.tv_usec) - (s_time.tv_usec);
+    std::cout << "The test ran in " << seconds << " seconds and " << microseconds <<
+              " microseconds." << std::endl << std::endl;
+    //end test
+
+
+    //check if the list is empty
+    std::cout << lnList << std::endl;
+
+
+	//pushes values after head onto the list
+    lnList.pushAfterHead(33);
+    lnList.pushAfterHead(34);
+	lnList.pushAfterHead(35);
+	lnList.pushAfterHead(36);
+	//print list
+//	std::cout << lnList << std::endl << std::endl;
+	//push values before head onto the list
+	lnList.pushBeforeHead(88);
+	lnList.pushBeforeHead(89);
+	lnList.pushBeforeHead(90);
+	lnList.pushBeforeHead(91);
+	//another display function
+//	lnList.display();
+	std::cout << std::endl;
+    lnList.clearList();
+    std::cout << std::endl;
+//	lnList.emptyList();
+    if (lnList.isEmpty())
+    {
+        std::cout << "list is empty" << std::endl << std::endl;
+    }
+    else
+    {
+        std::cout << "list has members" << std::endl << std::endl;
+    }
+    //repopulate the list
+    lnList.pushAfterHead(35);
+	lnList.pushAfterHead(36);
+	lnList.pushBeforeHead(88);
+	lnList.pushBeforeHead(89);
+	//list members and positions
+    lnList.listMembers();
+    std::cout << std::endl << std::endl;
+    //delete node by value
+    lnList.deleteByValue(36);
+    lnList.listMembers();
+    std::cout << std::endl << std::endl;
+    //find node position by value
+    lnList.findDataPos(88);
+    std::cout << std::endl << std::endl;
+    //list the node count
+    std::cout << "There are " << lnList.countNodes() << " nodes in the list";
+    std::cout << std::endl;
+
+
+
+	return 0;
+
+}
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ ./hw4
+Head 
+
+The test ran in 0 seconds and 133 microseconds.
+
+The test ran in 0 seconds and 194 microseconds.
+
+Head 
+
+
+list is empty
+
+Numbers:   36  35  88  89
+Position:   1   2   3   4 
+
+Numbers:   35  88  89
+Position:   1   2   3 
+
+The value: 88 is the 2 node in the list
+
+There are 3 nodes in the list
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ exit
+exit
+
+Script done on Wed 02 Mar 2016 10:24:39 PM EST

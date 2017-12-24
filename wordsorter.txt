@@ -1,0 +1,282 @@
+Script started on Tue 23 Feb 2016 09:23:01 AM EST
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat dataIn.txt
+Inventors have undoubtedly been heroes for all of us. By burning the midnight oil, they have gifted humankind with revolutionizing technology. Whether it is a mobile phone or a radio, they have never been miser in endowing the society with life transforming inventions. One such empowering invention has been of Computer. Not one but there are many geniuses behind the development and growth of this phenomenal technology. Wooden abacus laid basis for the computers long time back. By walking through annals of computer history, one can have a peek into rich legacy of 21st century’s technology. Back from 3000 B.C. abacus, which was a simple calculating tool introduced in China, is known to be the foundation of today’s computers. But in essence this tool cannot be compared with the super computers of today. After abacus, came slide rule in year 1622 A.D introduced by William Oughtred. This was considered to be though provoking and conceptual element to the computer development. Growth of computers had to go through various phases, starting with difference engine by Charles Babbage in year 1822. Difference and analytical engines were too mechanical and their weight was in tons. The first generation that lasted from 1940 to 1956 gave computers in the form of vacuum tubes. And second generation computers that survived from 1956 to 1963 were based on the transistors. Then came its third generation, 1964 to 1971, which witnessed integrated circuits. And the coming generations were the ones where artificial intelligence took the lead.  The interesting part is who is known as father of computers- Charles Baggage did not know that he would make an important place in history with his invention. In the 19th century, calculation of mathematical table was done by computers. It was not the technology that is used today but the people, who took computing task, were known as computers. But because it was done by human beings, there were many errors too. With a computer science and a mathematics background, Charles thought of building calculating machine. He began working on a machine that could analyze the input while giving appropriate outputs. Because it was designed for eliminating differential errors with mathematical table, it was known as difference engine. Charles Baggage could not complete the design due to complexity and size of its design. But his urge to find a solution to this problem led to introduction of difference engine 2 which was better version of the initial design.]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ g++ -o sortInput sortInput.cpp
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ ls
+Clicker1.cpp       complexNumber.o              [0m[01;32mhw3[0m           quiz1.txt
+Clicker1.h         dataIn.txt                   hw3.cpp       Quiz1.txt
+Clicker1.o         dataOut.txt                  hw3.o         [01;32msortInput[0m
+ClickerMain.cpp    Hello World.cpp              hw.cpp        sortInput.cpp
+ClickerMain.o      HelloWorld.cpp               makefile      text.txt
+[01;32mClickerProgram[0m     homework3_warrenhammock.txt  practice.txt  wordsorter.txt
+complexNumber.cpp  [01;32mhw[0m                           [01;32mQuiz1[0m
+complexNumber.h    hw2.txt                      Quiz1.cpp
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ ./sortInput 
+	---------------Put Text In Alphabetical Order----------------
+
+Enter a file to input: data.I  In.tt xt
+
+Enter filename of the sorted file: data. Out.txt
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat dataOut.txt
+growth   1622 1822. 1940 1956 1956 1963 1964 1971, 19th 2 21st 3000 A.D After And And B.C. Babbage Back Baggage Baggage Because But But But By By Charles Charles Charles Charles China, Computer. Difference Growth He In Inventors It Not One Oughtred. The The Then This Whether William With Wooden a a a a a a a a abacus abacus, abacus, all an analytical analyze and and and and and and annals appropriate are artificial as as as back. background, based basis be be be because been been been began behind beings, better building burning but but by by by by calculating calculating calculation came came can cannot century, century’s circuits. coming compared complete complexity computer computer computer computers computers computers computers computers computers- computers. computers. computers. computing conceptual considered could could design design. design. designed development development. did difference difference difference differential done done due element eliminating empowering endowing engine engine engine. engines errors errors essence father find first for for for form foundation from from from gave generation generation generation, generations geniuses gifted giving go provoking  had has have have have have he heroes his his history history, human humankind important in in in in in in in in initial input integrated intelligence interesting into introduced introduced introduction invention invention. inventions. is is is is is it it it it its its know known known known known laid lasted lead. led legacy life long machine machine. make many many mathematical mathematical mathematics mechanical midnight miser mobile never not not not of of of of of of of of of of of of of of of oil, on on one one ones or outputs. part peek people, phases, phenomenal phone place problem year  radio, revolutionizing rich rule science second simple size slide society solution starting such super survived table table, task, technology technology. technology. technology. that that that that that the the the the the the the the the the the the the the the the the the their there there they they third this this this though thought through through time to to to to to to to to to to to today today. today’s tons. too too. took took tool tool transforming transistors. tubes. undoubtedly urge us. used vacuum various version walking was was was was was was was was was weight were were were were were where which which which while who who with with with with with with witnessed working would year ]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ cat sortInput.cpp
+/*Filename: sortInput.cpp
+created by: Warren Hammock
+date: 2/22/16
+purpose: takes a text file and outputs different text file with all words in alphabetical order.
+addition files: none
+
+*/
+#include<iostream> //user input
+#include<fstream> //file input/output
+#include<string>  //string class
+#include<cstdlib>
+
+
+
+void splitThreeWay(std::ifstream& fileIn);  //splits text into three files alphabetically (1st file a thru h, second h thru r, ect.)
+void sortFilesFirst(std::ofstream& fileOut); //puts first file into array, sorts them, output to main output file.
+void sortFilesSecond(std::ofstream& fileOut); //puts second file into array, sorts them, output to main out file after first file output.
+void sortFilesThird(std::ofstream& fileOut);
+
+int main()
+{
+    std::ifstream inFile;
+    std::ofstream outFileSorted;
+    std::string dataOut;
+    char initialFile[25];
+    char sortedName[25];
+    //gets name of main input file and allows user to name main output file.
+    std::cout << "\t---------------Put Text In Alphabetical Order----------------\n";
+    std::cout << std::endl;
+    std::cout << "Enter a file to input: ";
+    std::cin >> initialFile;
+    std::cout << std::endl;
+    std::cout << "Enter filename of the sorted file: ";
+    std::cin >> sortedName;
+
+
+
+    //open main output file
+    inFile.open(initialFile, std::ios::in);
+    if(inFile.fail())
+    {
+        std::cout << "input file failed to load!!!!!!";
+        exit(1);
+    }
+    //open main output file
+    outFileSorted.open(sortedName, std::ios::out | std::ios::trunc);
+    if(outFileSorted.fail())
+    {
+        std::cout << "input file failed to load!!!!!!";
+        exit(1);
+    }
+
+    splitThreeWay(inFile);
+    inFile.close();     //close main input file.  no longer needed.
+    sortFilesFirst(outFileSorted);
+    sortFilesSecond(outFileSorted);
+    sortFilesThird(outFileSorted);
+    std::remove ("dataOut1.txt"); //remove all three files used for sorting
+    std::remove ("dataOut2.txt");
+    std::remove ("dataOut3.txt");
+    outFileSorted.close(); //close main output file.  program closing
+
+
+    return 0;
+
+}
+//takes main input as parameter and sorts file into three smaller files sorted by: first is a thru h, second i thru r, third is s thru z.
+void splitThreeWay(std::ifstream& fileIn)
+{
+    std::ofstream outFile1;
+    std::ofstream outFile2;
+    std::ofstream outFile3;
+    std::string wordDivide;
+    outFile1.open("dataOut1.txt", std::ios::trunc);
+    if(outFile1.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    outFile2.open("dataOut2.txt", std::ios::trunc);
+    if(outFile2.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    outFile3.open("dataOut3.txt", std::ios::trunc);
+    if(outFile3.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    while (! fileIn.eof())
+	{
+		getline(fileIn, wordDivide, ' ');
+		if (wordDivide == " ")
+        {
+            wordDivide = "";
+        }
+		else if (wordDivide <= "h")
+        {
+            outFile1 << wordDivide << " ";
+        }
+        else if (wordDivide <= "r")
+        {
+            outFile2 << wordDivide << " ";
+        }
+        else
+        {
+            outFile3 << wordDivide << " ";
+        }
+	}
+	outFile1.close();
+    outFile2.close();
+    outFile3.close();
+}
+//takes first temp file, puts in array and sorts alphabetically.  puts output into main output file.
+void sortFilesFirst(std::ofstream& outStream)
+{
+    std::ifstream outFile1;
+
+    outFile1.open("dataOut1.txt", std::ios::in);
+    if(outFile1.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    std::string inputArray[1000];
+    int i = 0;
+    int counter = 0;
+
+
+    while (! outFile1.eof())
+    {
+        std::string word;
+        getline(outFile1, word, ' ');
+        inputArray[i] = word;
+        i++;
+        counter++;
+    }
+
+    for (int y = 0; y < counter; y++)
+    {
+        for (int k = 1; k < counter; k++)
+        {
+            if (inputArray[y] < inputArray[k]) {
+                std::string tmp = inputArray[y];
+                inputArray[y] = inputArray[k];
+                inputArray[k] = tmp;
+                }
+        }
+    }
+
+
+    for (int x = 0; x < counter; x++)
+    {
+        outStream << inputArray[x] << " ";
+    }
+
+
+}
+//takes second temp file, puts in array and sorts alphabetically.  puts output into main output file.
+void sortFilesSecond(std::ofstream& outStream)
+{
+    std::ifstream outFile2;
+
+    outFile2.open("dataOut2.txt", std::ios::in);
+    if(outFile2.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    std::string inputArray[1000];
+    int i = 0;
+    int counter = 0;
+
+
+    while (! outFile2.eof())
+    {
+        std::string word;
+        getline(outFile2, word, ' ');
+        inputArray[i] = word;
+        i++;
+        counter++;
+    }
+
+    for (int y = 0; y < counter; y++)
+    {
+        for (int k = 1; k < counter; k++)
+        {
+            if (inputArray[y] < inputArray[k]) {
+                std::string tmp = inputArray[y];
+                inputArray[y] = inputArray[k];
+                inputArray[k] = tmp;
+                }
+        }
+    }
+
+
+    for (int x = 0; x < counter; x++)
+    {
+        outStream << inputArray[x] << " ";
+    }
+
+
+}
+//takes third temp file, puts in array and sorts alphabetically.  puts output into main output file.
+void sortFilesThird(std::ofstream& outStream)
+{
+    std::ifstream outFile3;
+
+    outFile3.open("dataOut3.txt", std::ios::in);
+    if(outFile3.fail())
+    {
+        std::cout << "output file not found";
+        exit(1);
+    }
+    std::string inputArray[1000];
+    int i = 0;
+    int counter = 0;
+
+
+    while (! outFile3.eof())
+    {
+        std::string word;
+        getline(outFile3, word, ' ');
+        inputArray[i] = word;
+        i++;
+        counter++;
+    }
+
+    for (int y = 0; y < counter; y++)
+    {
+        for (int k = 1; k < counter; k++)
+        {
+            if (inputArray[y] < inputArray[k]) {
+                std::string tmp = inputArray[y];
+                inputArray[y] = inputArray[k];
+                inputArray[k] = tmp;
+                }
+        }
+    }
+
+
+    for (int x = 0; x < counter; x++)
+    {
+        outStream << inputArray[x] << " ";
+    }
+
+
+}
+
+
+
+
+
+
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ exit[K[K[K[Kend
+bash: end: command not found...
+]0;cwh3@pluto:~/CS519[cwh3@pluto CS519]$ exit
+exit
+
+Script done on Tue 23 Feb 2016 09:26:11 AM EST

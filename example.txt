@@ -1,0 +1,7 @@
+http://people.cedarville.edu/Employee/kshomper/cs1210_web/examples/complexNumber.cpp
+
+http://people.cedarville.edu/Employee/kshomper/cs1210_web/examples/complexNumberTest.cpp
+
+http://people.cedarville.edu/Employee/kshomper/cs1210_web/examples/complexNumber.h
+
+http://people.cedarville.edu/Employee/kshomper/cs1220_web/lecture_notes/true_complex_number_class.htm

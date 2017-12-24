@@ -1,0 +1,24 @@
+Script started on Thu 14 Jan 2016 08:37:36 PM EST
+]777;notify;Command completed;cat > list.txt]0;cwh3@ht319-13:~]7;file://ht319-13.hood.edu/home/cwh3[cwh3@ht319-13 ~]$ cat hw.cpp\
+> 
+/*
+CS 519 - Spring 2016, Dr. Liu
+Warren Hammock
+*/
+
+//hw.cpp
+//Hello World Sample Program
+ #include <iostream>
+using namespace std;
+
+int main()
+{
+	cout << "Hello World!\n";
+}
+]777;notify;Command completed;cat hw.cpp\]0;cwh3@ht319-13:~]7;file://ht319-13.hood.edu/home/cwh3[cwh3@ht319-13 ~]$ g++ -o hw hw.cpp
+]777;notify;Command completed;g++ -o hw hw.cpp]0;cwh3@ht319-13:~]7;file://ht319-13.hood.edu/home/cwh3[cwh3@ht319-13 ~]$ ./hw
+Hello World!
+]777;notify;Command completed;./hw]0;cwh3@ht319-13:~]7;file://ht319-13.hood.edu/home/cwh3[cwh3@ht319-13 ~]$ exit
+exit
+
+Script done on Thu 14 Jan 2016 08:38:24 PM EST
